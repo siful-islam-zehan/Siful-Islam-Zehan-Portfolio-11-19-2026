@@ -61,14 +61,14 @@ export default function AdminSettingsPage() {
         setAboutText(data.about_text || "");
         setToolsInput(data.tools ? data.tools.join(", ") : "");
         setExperiences(
-          data.experiences && data.experiences.length > 0
+          data.experiences && Array.isArray(data.experiences)
             ? data.experiences
-            : ((PORTFOLIO_DATA as any).experiences || [])
+            : []
         );
         setEducation(
-          data.education && data.education.length > 0
+          data.education && Array.isArray(data.education)
             ? data.education
-            : ((PORTFOLIO_DATA as any).education || [])
+            : []
         );
       } catch {
         showToast("Failed to load site settings", "error");

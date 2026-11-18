@@ -23,8 +23,8 @@ interface AboutSectionProps {
 }
 
 export const AboutSection: React.FC<AboutSectionProps> = ({
-  experiences = PORTFOLIO_DATA.experiences || [],
-  education = PORTFOLIO_DATA.education || [],
+  experiences = [],
+  education = [],
   tools = PORTFOLIO_DATA.tools,
   location,
   coordinates,

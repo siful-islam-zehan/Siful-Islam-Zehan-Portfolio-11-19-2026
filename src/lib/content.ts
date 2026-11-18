@@ -182,6 +182,8 @@ export async function getPublishedDevelopedWebsites(): Promise<PortfolioProject[
 export async function getSiteSettings(): Promise<SiteSettingsData> {
   const defaultSettings: SiteSettingsData = {
     ...PORTFOLIO_DATA,
+    experiences: [],
+    education: [],
     phone: undefined,
     cvUrl: undefined,
     heroLine1: "Designing digital",
@@ -272,6 +274,45 @@ export async function getSiteSettings(): Promise<SiteSettingsData> {
 
     const socials = dynamicSocials.length > 0 ? dynamicSocials : PORTFOLIO_DATA.socials;
 
+    // Resolve experiences: 1st check direct column, 2nd check JSONB packed inside services
+    let experiences: typeof PORTFOLIO_DATA.experiences = [];
+    if (Array.isArray(db.experiences) && db.experiences.length > 0) {
+      experiences = db.experiences as any;
+    } else if (
+      db.services &&
+      typeof db.services === "object" &&
+      !Array.isArray(db.services) &&
+      Array.isArray((db.services as any).experiences)
+    ) {
+      experiences = (db.services as any).experiences;
+    }
+
+    // Resolve education: 1st check direct column, 2nd check JSONB packed inside services
+    let education: typeof PORTFOLIO_DATA.education = [];
+    if (Array.isArray(db.education) && db.education.length > 0) {
+      education = db.education as any;
+    } else if (
+      db.services &&
+      typeof db.services === "object" &&
+      !Array.isArray(db.services) &&
+      Array.isArray((db.services as any).education)
+    ) {
+      education = (db.services as any).education;
+    }
+
+    // Resolve services items
+    let services = PORTFOLIO_DATA.services;
+    if (Array.isArray(db.services) && db.services.length > 0) {
+      services = db.services as any;
+    } else if (
+      db.services &&
+      typeof db.services === "object" &&
+      Array.isArray((db.services as any).items) &&
+      (db.services as any).items.length > 0
+    ) {
+      services = (db.services as any).items;
+    }
+
     return {
       identity: {
         fullName: PORTFOLIO_DATA.identity.fullName,
@@ -289,9 +330,9 @@ export async function getSiteSettings(): Promise<SiteSettingsData> {
       navigation: PORTFOLIO_DATA.navigation,
       socials: socials.length > 0 ? socials : PORTFOLIO_DATA.socials,
       tools: db.tools && db.tools.length > 0 ? db.tools : PORTFOLIO_DATA.tools,
-      services: db.services && db.services.length > 0 ? (db.services as any) : PORTFOLIO_DATA.services,
-      experiences: (db.experiences && db.experiences.length > 0) ? (db.experiences as any) : PORTFOLIO_DATA.experiences,
-      education: (db.education && db.education.length > 0) ? (db.education as any) : PORTFOLIO_DATA.education,
+      services,
+      experiences,
+      education,
       phone: db.phone || undefined,
       cvUrl: db.cv_url || undefined,
       heroLine1: db.hero_headline_line1 || "Designing digital",

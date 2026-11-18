@@ -146,8 +146,8 @@ function getInitialLocalSettings(): DbSiteSettings {
     about_text: "",
     services: [],
     tools: [],
-    experiences: (PORTFOLIO_DATA as any).experiences || [],
-    education: (PORTFOLIO_DATA as any).education || [],
+    experiences: [],
+    education: [],
     updated_at: new Date().toISOString(),
   };
 }
@@ -424,7 +424,28 @@ export async function fetchSiteSettings(): Promise<DbSiteSettings> {
         .eq("id", 1)
         .single();
 
-      if (!error && data) return data as DbSiteSettings;
+      if (!error && data) {
+        const raw = data as any;
+        let expList = raw.experiences;
+        let eduList = raw.education;
+
+        // If not in dedicated columns, check if packed inside services JSONB
+        if (
+          (!Array.isArray(expList) || expList.length === 0) &&
+          raw.services &&
+          typeof raw.services === "object" &&
+          !Array.isArray(raw.services)
+        ) {
+          if (Array.isArray(raw.services.experiences)) expList = raw.services.experiences;
+          if (Array.isArray(raw.services.education)) eduList = raw.services.education;
+        }
+
+        return {
+          ...raw,
+          experiences: Array.isArray(expList) ? expList : [],
+          education: Array.isArray(eduList) ? eduList : [],
+        } as DbSiteSettings;
+      }
     }
   }
 
@@ -466,21 +487,32 @@ export async function saveSiteSettings(settings: Partial<DbSiteSettings>): Promi
         .select()
         .single();
 
-      // If column doesn't exist in Supabase yet, strip experiences & education and retry
+      // If dedicated column doesn't exist in Supabase yet, pack experiences & education into services JSONB column
       if (error && (error.message.includes("column") || error.code === "PGRST204" || error.code === "42703")) {
         const { experiences, education, ...safeSettings } = settings;
+        const packedServices = {
+          items: Array.isArray(safeSettings.services) ? safeSettings.services : [],
+          experiences: experiences || [],
+          education: education || [],
+        };
+
         const retry = await supabase
           .from("site_settings")
           .upsert({
             id: 1,
             ...safeSettings,
+            services: packedServices,
             updated_at: now,
           })
           .select()
           .single();
 
         if (retry.error) throw new Error(retry.error.message);
-        return { ...(retry.data as DbSiteSettings), experiences, education };
+        return {
+          ...(retry.data as DbSiteSettings),
+          experiences: experiences || [],
+          education: education || [],
+        };
       }
 
       if (error) throw new Error(error.message);

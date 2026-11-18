@@ -184,35 +184,7 @@ export const PORTFOLIO_DATA = {
     },
   ] as ServiceItem[],
 
-  experiences: [
-    {
-      id: "exp-1",
-      role: "UI/UX Designer & Front-End Designer",
-      company: "Independent Practice / Client Collaborations",
-      location: "Dhaka, Bangladesh",
-      period: "2023 — Present",
-      description:
-        "Designing human-centered digital products, responsive web experiences, design systems, and functional front-end interfaces with React, Next.js, and modern CSS.",
-    },
-    {
-      id: "exp-2",
-      role: "Product & SaaS Designer",
-      company: "Digital Product Initiatives",
-      location: "Remote",
-      period: "2022 — 2023",
-      description:
-        "Created scalable SaaS dashboards, design tokens, interactive prototypes, and intuitive user flows for complex workflows.",
-    },
-  ] as ExperienceItem[],
+  experiences: [] as ExperienceItem[],
 
-  education: [
-    {
-      id: "edu-1",
-      degree: "Computer Science & Engineering / Design Studies",
-      institution: "Dhaka, Bangladesh",
-      period: "2020 — 2024",
-      description:
-        "Focus on human-computer interaction, visual communication, front-end architecture, and digital product design.",
-    },
-  ] as EducationItem[],
+  education: [] as EducationItem[],
 };
