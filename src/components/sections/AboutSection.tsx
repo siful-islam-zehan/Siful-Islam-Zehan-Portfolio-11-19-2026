@@ -207,6 +207,108 @@ export const AboutSection: React.FC<AboutSectionProps> = ({
                 <span className="text-foreground">{availability || "Open for Projects • 2026"}</span>
               </div>
             </div>
+
+            {/* Career Timeline / Work Experience (Left Column) */}
+            <div className="pt-6 border-t border-border space-y-4">
+              <div className="flex items-center justify-between">
+                <h3 className="type-label text-text-muted font-mono tracking-widest text-xs">
+                  CAREER &amp; WORK EXPERIENCE
+                </h3>
+                <span className="type-label text-[10px] text-accent border border-accent/40 bg-accent/5 px-2.5 py-0.5 rounded-full font-mono">
+                  VERIFIED HISTORY
+                </span>
+              </div>
+
+              {experiences && experiences.length > 0 ? (
+                <div className="space-y-3">
+                  {experiences.map((exp: ExperienceItem, idx: number) => (
+                    <div
+                      key={exp.id || `exp-${idx}`}
+                      className="border border-border p-5 bg-background hover:border-foreground/40 transition-colors"
+                    >
+                      <div className="flex flex-col gap-1.5 mb-2">
+                        <div className="flex items-start justify-between gap-2">
+                          <h4 className="font-serif text-base text-foreground font-normal tracking-tight">
+                            {exp.role}
+                          </h4>
+                          <span className="type-label text-[11px] font-mono text-text-muted bg-neutral-100 border border-border px-2 py-0.5 rounded shrink-0">
+                            {exp.period}
+                          </span>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <span className="type-label text-xs text-accent font-mono font-medium">
+                            @{exp.company}
+                          </span>
+                          {exp.location && (
+                            <>
+                              <span className="text-text-muted text-xs">•</span>
+                              <span className="type-label text-[11px] text-text-muted font-mono">
+                                {exp.location}
+                              </span>
+                            </>
+                          )}
+                        </div>
+                      </div>
+                      {exp.description && (
+                        <p className="type-body text-xs text-text-muted leading-relaxed mt-2 pt-2 border-t border-border/50">
+                          {exp.description}
+                        </p>
+                      )}
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <div className="border border-border p-4 bg-[#F8F7F4] font-mono text-xs text-text-muted">
+                  No work experience entries recorded yet.
+                </div>
+              )}
+            </div>
+
+            {/* Academic & Education Background (Left Column) */}
+            <div className="pt-6 border-t border-border space-y-4">
+              <div className="flex items-center justify-between">
+                <h3 className="type-label text-text-muted font-mono tracking-widest text-xs">
+                  ACADEMIC &amp; EDUCATION BACKGROUND
+                </h3>
+                <span className="type-label text-[10px] text-text-muted border border-border px-2.5 py-0.5 rounded-full font-mono">
+                  ACCREDITED
+                </span>
+              </div>
+
+              {education && education.length > 0 ? (
+                <div className="space-y-3">
+                  {education.map((edu: EducationItem, idx: number) => (
+                    <div
+                      key={edu.id || `edu-${idx}`}
+                      className="border border-border p-5 bg-background hover:border-foreground/40 transition-colors"
+                    >
+                      <div className="flex flex-col gap-1.5 mb-2">
+                        <div className="flex items-start justify-between gap-2">
+                          <h4 className="font-serif text-base text-foreground font-normal tracking-tight">
+                            {edu.degree}
+                          </h4>
+                          <span className="type-label text-[11px] font-mono text-text-muted bg-neutral-100 border border-border px-2 py-0.5 rounded shrink-0">
+                            {edu.period}
+                          </span>
+                        </div>
+                        <span className="type-label text-xs text-text-muted font-mono block">
+                          {edu.institution}
+                        </span>
+                      </div>
+                      {edu.description && (
+                        <p className="type-body text-xs text-text-muted leading-relaxed mt-2 pt-2 border-t border-border/50">
+                          {edu.description}
+                        </p>
+                      )}
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <div className="border border-border p-4 bg-[#F8F7F4] font-mono text-xs text-text-muted">
+                  No educational credentials recorded yet.
+                </div>
+              )}
+            </div>
           </div>
 
           {/* 
@@ -293,108 +395,6 @@ export const AboutSection: React.FC<AboutSectionProps> = ({
                   </span>
                 ))}
               </div>
-            </div>
-
-            {/* Career Timeline / Work Experience */}
-            <div className="pt-8 border-t border-border">
-              <div className="flex items-center justify-between mb-4">
-                <h3 className="type-label text-text-muted font-mono tracking-widest">
-                  CAREER &amp; WORK EXPERIENCE
-                </h3>
-                <span className="type-label text-[10px] text-accent border border-accent/40 bg-accent/5 px-2.5 py-0.5 rounded-full font-mono">
-                  VERIFIED HISTORY
-                </span>
-              </div>
-
-              {experiences && experiences.length > 0 ? (
-                <div className="space-y-4">
-                  {experiences.map((exp: ExperienceItem, idx: number) => (
-                    <div
-                      key={exp.id || `exp-${idx}`}
-                      className="border border-border p-6 bg-background hover:border-foreground/40 transition-colors"
-                    >
-                      <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-2 mb-2">
-                        <div>
-                          <h4 className="font-serif text-lg text-foreground font-normal tracking-tight">
-                            {exp.role}
-                          </h4>
-                          <div className="flex items-center gap-2 mt-1">
-                            <span className="type-label text-xs text-accent font-mono font-medium">
-                              @{exp.company}
-                            </span>
-                            {exp.location && (
-                              <>
-                                <span className="text-text-muted text-xs">•</span>
-                                <span className="type-label text-xs text-text-muted font-mono">
-                                  {exp.location}
-                                </span>
-                              </>
-                            )}
-                          </div>
-                        </div>
-                        <span className="type-label text-xs font-mono text-text-muted bg-neutral-100 border border-border px-2.5 py-1 rounded shrink-0 self-start">
-                          {exp.period}
-                        </span>
-                      </div>
-                      {exp.description && (
-                        <p className="type-body text-xs text-text-muted leading-relaxed mt-3 pt-3 border-t border-border/50">
-                          {exp.description}
-                        </p>
-                      )}
-                    </div>
-                  ))}
-                </div>
-              ) : (
-                <div className="border border-border p-6 bg-[#F8F7F4] font-mono text-xs text-text-muted">
-                  No work experience entries recorded yet.
-                </div>
-              )}
-            </div>
-
-            {/* Academic & Education Background */}
-            <div className="pt-8 border-t border-border">
-              <div className="flex items-center justify-between mb-4">
-                <h3 className="type-label text-text-muted font-mono tracking-widest">
-                  ACADEMIC &amp; EDUCATION BACKGROUND
-                </h3>
-                <span className="type-label text-[10px] text-text-muted border border-border px-2.5 py-0.5 rounded-full font-mono">
-                  ACCREDITED
-                </span>
-              </div>
-
-              {education && education.length > 0 ? (
-                <div className="space-y-4">
-                  {education.map((edu: EducationItem, idx: number) => (
-                    <div
-                      key={edu.id || `edu-${idx}`}
-                      className="border border-border p-6 bg-background hover:border-foreground/40 transition-colors"
-                    >
-                      <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-2 mb-2">
-                        <div>
-                          <h4 className="font-serif text-lg text-foreground font-normal tracking-tight">
-                            {edu.degree}
-                          </h4>
-                          <span className="type-label text-xs text-text-muted font-mono block mt-1">
-                            {edu.institution}
-                          </span>
-                        </div>
-                        <span className="type-label text-xs font-mono text-text-muted bg-neutral-100 border border-border px-2.5 py-1 rounded shrink-0 self-start">
-                          {edu.period}
-                        </span>
-                      </div>
-                      {edu.description && (
-                        <p className="type-body text-xs text-text-muted leading-relaxed mt-3 pt-3 border-t border-border/50">
-                          {edu.description}
-                        </p>
-                      )}
-                    </div>
-                  ))}
-                </div>
-              ) : (
-                <div className="border border-border p-6 bg-[#F8F7F4] font-mono text-xs text-text-muted">
-                  No educational credentials recorded yet.
-                </div>
-              )}
             </div>
           </div>
         </div>
