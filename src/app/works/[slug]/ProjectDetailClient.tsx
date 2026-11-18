@@ -131,25 +131,50 @@ export const ProjectDetailClient: React.FC<ProjectDetailClientProps> = ({
             {project.gallery.map((screen, idx) => (
               <div
                 key={idx}
-                className="group relative border border-border bg-[#F8F7F4] overflow-hidden cursor-zoom-in"
+                className="group relative border border-border bg-[#1C1C1C] rounded-lg overflow-hidden shadow-sm cursor-pointer transition-all duration-300 hover:shadow-xl hover:border-foreground/30"
                 onClick={() => openModal(idx)}
               >
-                <div className="relative w-full aspect-[16/11]">
-                  <Image
+                {/* Browser Frame Header */}
+                <div className="px-4 py-3 bg-[#242424] border-b border-white/10 flex items-center justify-between">
+                  <div className="flex items-center gap-1.5">
+                    <span className="w-2.5 h-2.5 rounded-full bg-[#FF5F56]" />
+                    <span className="w-2.5 h-2.5 rounded-full bg-[#FFBD2E]" />
+                    <span className="w-2.5 h-2.5 rounded-full bg-[#27C93F]" />
+                  </div>
+                  <div className="px-3 py-0.5 bg-[#171717] border border-white/10 rounded-full text-[10px] font-mono text-[#9E9B93] flex items-center gap-1.5 truncate max-w-[240px]">
+                    <span className="text-emerald-400 text-[9px]">🔒</span>
+                    <span className="text-white/40">https://</span>
+                    <span className="text-white truncate">{project.title.toLowerCase().replace(/[^a-z0-9]+/g, "")}.com</span>
+                  </div>
+                  <span className="type-label text-[10px] font-mono text-white/70 group-hover:text-white flex items-center gap-1">
+                    <span>WEBSITE VIEW</span>
+                    <span>↗</span>
+                  </span>
+                </div>
+
+                {/* Website Preview Canvas */}
+                <div className="relative w-full max-h-[600px] overflow-hidden bg-white">
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img
                     src={screen}
                     alt={`${project.title} detailed screen ${idx + 1}`}
-                    fill
-                    sizes="(max-width: 1024px) 100vw, 58vw"
-                    className="object-cover object-top transition-transform duration-700 ease-editorial group-hover:scale-[1.02]"
-                    priority={idx === 0}
+                    className="w-full h-auto block object-cover object-top transition-transform duration-700 ease-editorial group-hover:scale-[1.01]"
                   />
+
+                  {/* Gradient Fade with Scroll Cue */}
+                  <div className="absolute bottom-0 inset-x-0 h-32 bg-gradient-to-t from-black/80 via-black/40 to-transparent pointer-events-none flex items-end justify-center pb-4">
+                    <span className="type-label text-[11px] font-mono px-4 py-2 bg-white text-black font-medium rounded-full shadow-lg flex items-center gap-2 group-hover:scale-105 transition-transform">
+                      <span>Click to scroll full website design</span>
+                      <span>↕</span>
+                    </span>
+                  </div>
                 </div>
 
                 {/* Caption Bar */}
-                <div className="p-3 bg-background border-t border-border flex items-center justify-between text-xs text-text-muted font-mono">
-                  <span>FIGURE {String(idx + 1).padStart(2, "0")} {"//"} SCREEN VIEW</span>
-                  <span className="type-label text-[10px] text-foreground group-hover:underline">
-                    CLICK TO EXPAND ⛶
+                <div className="p-3 bg-[#171717] border-t border-white/10 flex items-center justify-between text-xs text-[#8C8880] font-mono">
+                  <span>FIGURE {String(idx + 1).padStart(2, "0")} {"//"} WEBSITE SCREEN VIEW</span>
+                  <span className="type-label text-[10px] text-white group-hover:underline">
+                    FULLSCREEN INTERACTIVE SCROLL ⛶
                   </span>
                 </div>
               </div>
