@@ -2,7 +2,7 @@
 
 import React, { useRef, useEffect } from "react";
 import Image from "next/image";
-import { PORTFOLIO_DATA } from "@/data/portfolio";
+import { PORTFOLIO_DATA, ExperienceItem, EducationItem } from "@/data/portfolio";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { isReducedMotion, MOTION_TOKENS } from "@/utils/animation";
@@ -11,7 +11,17 @@ if (typeof window !== "undefined") {
   gsap.registerPlugin(ScrollTrigger);
 }
 
-export const AboutSection: React.FC = () => {
+interface AboutSectionProps {
+  experiences?: ExperienceItem[];
+  education?: EducationItem[];
+  tools?: string[];
+}
+
+export const AboutSection: React.FC<AboutSectionProps> = ({
+  experiences = PORTFOLIO_DATA.experiences || [],
+  education = PORTFOLIO_DATA.education || [],
+  tools = PORTFOLIO_DATA.tools,
+}) => {
   const sectionRef = useRef<HTMLElement>(null);
   const portraitRef = useRef<HTMLDivElement>(null);
 
@@ -264,7 +274,7 @@ export const AboutSection: React.FC = () => {
                 CONFIRMED TOOLING &amp; SOFTWARE STACK
               </h3>
               <div className="flex flex-wrap gap-2.5">
-                {PORTFOLIO_DATA.tools.map((tool) => (
+                {(tools || PORTFOLIO_DATA.tools).map((tool) => (
                   <span
                     key={tool}
                     className="px-4 py-2 border border-border bg-background type-label text-xs text-foreground font-mono"
@@ -275,24 +285,106 @@ export const AboutSection: React.FC = () => {
               </div>
             </div>
 
-            {/* Career Timeline / Education (Labelled Placeholder) */}
+            {/* Career Timeline / Work Experience */}
             <div className="pt-8 border-t border-border">
               <div className="flex items-center justify-between mb-4">
                 <h3 className="type-label text-text-muted font-mono tracking-widest">
-                  CAREER &amp; EDUCATION RECORD
+                  CAREER &amp; WORK EXPERIENCE
                 </h3>
-                <span className="type-label text-[10px] text-text-muted border border-border px-2 py-0.5 rounded-sm">
-                  VERIFICATION PENDING
+                <span className="type-label text-[10px] text-accent border border-accent/40 bg-accent/5 px-2.5 py-0.5 rounded-full font-mono">
+                  VERIFIED HISTORY
                 </span>
               </div>
-              <div className="border border-border p-6 bg-[#F8F7F4] space-y-3 font-mono text-xs">
-                <p className="text-foreground">
-                  Formal chronology and institutional credentials are held in reserve pending client verification.
-                </p>
-                <p className="text-text-muted text-[11px]">
-                  Zero fabricated clients, awards, or statistics are published on this portfolio.
-                </p>
+
+              {experiences && experiences.length > 0 ? (
+                <div className="space-y-4">
+                  {experiences.map((exp: ExperienceItem, idx: number) => (
+                    <div
+                      key={exp.id || `exp-${idx}`}
+                      className="border border-border p-6 bg-background hover:border-foreground/40 transition-colors"
+                    >
+                      <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-2 mb-2">
+                        <div>
+                          <h4 className="font-serif text-lg text-foreground font-normal tracking-tight">
+                            {exp.role}
+                          </h4>
+                          <div className="flex items-center gap-2 mt-1">
+                            <span className="type-label text-xs text-accent font-mono font-medium">
+                              @{exp.company}
+                            </span>
+                            {exp.location && (
+                              <>
+                                <span className="text-text-muted text-xs">•</span>
+                                <span className="type-label text-xs text-text-muted font-mono">
+                                  {exp.location}
+                                </span>
+                              </>
+                            )}
+                          </div>
+                        </div>
+                        <span className="type-label text-xs font-mono text-text-muted bg-neutral-100 border border-border px-2.5 py-1 rounded shrink-0 self-start">
+                          {exp.period}
+                        </span>
+                      </div>
+                      {exp.description && (
+                        <p className="type-body text-xs text-text-muted leading-relaxed mt-3 pt-3 border-t border-border/50">
+                          {exp.description}
+                        </p>
+                      )}
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <div className="border border-border p-6 bg-[#F8F7F4] font-mono text-xs text-text-muted">
+                  No work experience entries recorded yet.
+                </div>
+              )}
+            </div>
+
+            {/* Academic & Education Background */}
+            <div className="pt-8 border-t border-border">
+              <div className="flex items-center justify-between mb-4">
+                <h3 className="type-label text-text-muted font-mono tracking-widest">
+                  ACADEMIC &amp; EDUCATION BACKGROUND
+                </h3>
+                <span className="type-label text-[10px] text-text-muted border border-border px-2.5 py-0.5 rounded-full font-mono">
+                  ACCREDITED
+                </span>
               </div>
+
+              {education && education.length > 0 ? (
+                <div className="space-y-4">
+                  {education.map((edu: EducationItem, idx: number) => (
+                    <div
+                      key={edu.id || `edu-${idx}`}
+                      className="border border-border p-6 bg-background hover:border-foreground/40 transition-colors"
+                    >
+                      <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-2 mb-2">
+                        <div>
+                          <h4 className="font-serif text-lg text-foreground font-normal tracking-tight">
+                            {edu.degree}
+                          </h4>
+                          <span className="type-label text-xs text-text-muted font-mono block mt-1">
+                            {edu.institution}
+                          </span>
+                        </div>
+                        <span className="type-label text-xs font-mono text-text-muted bg-neutral-100 border border-border px-2.5 py-1 rounded shrink-0 self-start">
+                          {edu.period}
+                        </span>
+                      </div>
+                      {edu.description && (
+                        <p className="type-body text-xs text-text-muted leading-relaxed mt-3 pt-3 border-t border-border/50">
+                          {edu.description}
+                        </p>
+                      )}
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <div className="border border-border p-6 bg-[#F8F7F4] font-mono text-xs text-text-muted">
+                  No educational credentials recorded yet.
+                </div>
+              )}
             </div>
           </div>
         </div>

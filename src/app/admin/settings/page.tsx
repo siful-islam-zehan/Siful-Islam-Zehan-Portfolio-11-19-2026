@@ -2,7 +2,8 @@
 
 import React, { useEffect, useState } from "react";
 import { fetchSiteSettings, saveSiteSettings } from "@/lib/admin-data-service";
-import { DbSiteSettings } from "@/lib/supabase/types";
+import { DbSiteSettings, ExperienceItem, EducationItem } from "@/lib/supabase/types";
+import { PORTFOLIO_DATA } from "@/data/portfolio";
 import { useToast } from "@/components/admin/Toast";
 import { createClient, isSupabaseConfigured } from "@/lib/supabase/client";
 
@@ -33,13 +34,15 @@ export default function AdminSettingsPage() {
   const [shortBio, setShortBio] = useState("");
   const [aboutText, setAboutText] = useState("");
   const [toolsInput, setToolsInput] = useState("");
+  const [experiences, setExperiences] = useState<ExperienceItem[]>([]);
+  const [education, setEducation] = useState<EducationItem[]>([]);
 
   useEffect(() => {
     async function load() {
       try {
         const data = await fetchSiteSettings();
         setSettings(data);
-        setEmail(data.email || "");
+        setEmail(data.email || "hello@sifulislamzehan.dev");
         setPhone(data.phone || "");
         setLocation(data.location || "");
         setCoordinates(data.coordinates || "");
@@ -57,6 +60,16 @@ export default function AdminSettingsPage() {
         setShortBio(data.short_bio || "");
         setAboutText(data.about_text || "");
         setToolsInput(data.tools ? data.tools.join(", ") : "");
+        setExperiences(
+          data.experiences && data.experiences.length > 0
+            ? data.experiences
+            : ((PORTFOLIO_DATA as any).experiences || [])
+        );
+        setEducation(
+          data.education && data.education.length > 0
+            ? data.education
+            : ((PORTFOLIO_DATA as any).education || [])
+        );
       } catch {
         showToast("Failed to load site settings", "error");
       } finally {
@@ -65,6 +78,65 @@ export default function AdminSettingsPage() {
     }
     load();
   }, [showToast]);
+
+  const handleAddExperience = () => {
+    setExperiences((prev) => [
+      ...prev,
+      {
+        id: "exp-" + Date.now(),
+        role: "",
+        company: "",
+        location: "Dhaka, Bangladesh",
+        period: "2024 — Present",
+        description: "",
+      },
+    ]);
+  };
+
+  const handleUpdateExperience = (
+    index: number,
+    field: keyof ExperienceItem,
+    value: string
+  ) => {
+    setExperiences((prev) => {
+      const next = [...prev];
+      next[index] = { ...next[index], [field]: value };
+      return next;
+    });
+  };
+
+  const handleRemoveExperience = (index: number) => {
+    setExperiences((prev) => prev.filter((_, i) => i !== index));
+  };
+
+  const handleAddEducation = () => {
+    setEducation((prev) => [
+      ...prev,
+      {
+        id: "edu-" + Date.now(),
+        degree: "",
+        institution: "",
+        period: "2020 — 2024",
+        description: "",
+      },
+    ]);
+  };
+
+  const handleUpdateEducation = (
+    index: number,
+    field: keyof EducationItem,
+    value: string
+  ) => {
+    setEducation((prev) => {
+      const next = [...prev];
+      next[index] = { ...next[index], [field]: value };
+      return next;
+    });
+  };
+
+  const handleRemoveEducation = (index: number) => {
+    setEducation((prev) => prev.filter((_, i) => i !== index));
+  };
 
   const handleCvUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -143,6 +215,8 @@ export default function AdminSettingsPage() {
         short_bio: shortBio.trim(),
         about_text: aboutText.trim(),
         tools: toolsArray,
+        experiences: experiences.filter((e) => e.role.trim() || e.company.trim()),
+        education: education.filter((e) => e.degree.trim() || e.institution.trim()),
       };
 
       const updated = await saveSiteSettings(payload);
@@ -195,7 +269,7 @@ export default function AdminSettingsPage() {
                 required
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                placeholder="sifulislamzehan@gmail.com"
+                placeholder="hello@sifulislamzehan.dev"
                 className="w-full text-xs font-mono p-2.5 border border-border rounded bg-background"
               />
             </div>
@@ -434,7 +508,225 @@ export default function AdminSettingsPage() {
           </div>
         </div>
 
-        {/* SECTION 5: CONFIRMED TOOLS */}
+        {/* SECTION 5: CAREER & WORK EXPERIENCE */}
+        <div className="bg-background border border-border p-6 rounded space-y-4">
+          <div className="flex items-center justify-between">
+            <div>
+              <h2 className="type-label text-xs uppercase tracking-wider text-foreground">
+                Career &amp; Work Experience
+              </h2>
+              <p className="text-[11px] font-mono text-text-muted mt-1">
+                Manage your professional positions and client collaborations (rendered in Chapter 05 About section).
+              </p>
+            </div>
+            <button
+              type="button"
+              onClick={handleAddExperience}
+              className="px-3 py-1.5 border border-border rounded text-xs font-mono hover:bg-neutral-100 flex items-center gap-1.5 cursor-pointer"
+            >
+              <span>+</span> Add Experience
+            </button>
+          </div>
+
+          <div className="space-y-4 pt-2">
+            {experiences.length === 0 ? (
+              <p className="text-xs font-mono text-text-muted italic py-4 text-center border border-dashed border-border rounded">
+                No work experience entries yet. Click &quot;+ Add Experience&quot; to add one.
+              </p>
+            ) : (
+              experiences.map((exp, index) => (
+                <div
+                  key={exp.id || index}
+                  className="p-4 border border-border rounded bg-[#FAFAF8] space-y-3"
+                >
+                  <div className="flex items-center justify-between border-b border-border/60 pb-2">
+                    <span className="type-label text-[11px] font-mono text-text-muted font-semibold">
+                      EXPERIENCE #{String(index + 1).padStart(2, "0")}
+                    </span>
+                    <button
+                      type="button"
+                      onClick={() => handleRemoveExperience(index)}
+                      className="text-xs font-mono text-red-500 hover:text-red-700 cursor-pointer"
+                    >
+                      ✕ Remove
+                    </button>
+                  </div>
+
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <div className="space-y-1">
+                      <label className="type-label text-[10px] font-mono text-text-muted">
+                        ROLE / TITLE *
+                      </label>
+                      <input
+                        type="text"
+                        value={exp.role}
+                        onChange={(e) => handleUpdateExperience(index, "role", e.target.value)}
+                        placeholder="e.g. UI/UX Designer & Front-End Designer"
+                        className="w-full text-xs font-mono p-2 border border-border rounded bg-background"
+                      />
+                    </div>
+                    <div className="space-y-1">
+                      <label className="type-label text-[10px] font-mono text-text-muted">
+                        COMPANY / CLIENT COLLABORATION *
+                      </label>
+                      <input
+                        type="text"
+                        value={exp.company}
+                        onChange={(e) => handleUpdateExperience(index, "company", e.target.value)}
+                        placeholder="e.g. Independent Practice / Tech Studio"
+                        className="w-full text-xs font-mono p-2 border border-border rounded bg-background"
+                      />
+                    </div>
+                  </div>
+
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <div className="space-y-1">
+                      <label className="type-label text-[10px] font-mono text-text-muted">
+                        PERIOD / TIMELINE
+                      </label>
+                      <input
+                        type="text"
+                        value={exp.period}
+                        onChange={(e) => handleUpdateExperience(index, "period", e.target.value)}
+                        placeholder="e.g. 2023 — Present"
+                        className="w-full text-xs font-mono p-2 border border-border rounded bg-background"
+                      />
+                    </div>
+                    <div className="space-y-1">
+                      <label className="type-label text-[10px] font-mono text-text-muted">
+                        LOCATION (Optional)
+                      </label>
+                      <input
+                        type="text"
+                        value={exp.location || ""}
+                        onChange={(e) => handleUpdateExperience(index, "location", e.target.value)}
+                        placeholder="e.g. Dhaka, Bangladesh or Remote"
+                        className="w-full text-xs font-mono p-2 border border-border rounded bg-background"
+                      />
+                    </div>
+                  </div>
+
+                  <div className="space-y-1">
+                    <label className="type-label text-[10px] font-mono text-text-muted">
+                      RESPONSIBILITIES &amp; SCOPE SUMMARY
+                    </label>
+                    <textarea
+                      rows={2}
+                      value={exp.description}
+                      onChange={(e) => handleUpdateExperience(index, "description", e.target.value)}
+                      placeholder="Summary of responsibilities, design deliverables, technical contributions..."
+                      className="w-full text-xs font-mono p-2 border border-border rounded bg-background"
+                    />
+                  </div>
+                </div>
+              ))
+            )}
+          </div>
+        </div>
+
+        {/* SECTION 6: ACADEMIC & EDUCATION BACKGROUND */}
+        <div className="bg-background border border-border p-6 rounded space-y-4">
+          <div className="flex items-center justify-between">
+            <div>
+              <h2 className="type-label text-xs uppercase tracking-wider text-foreground">
+                Academic &amp; Education Background
+              </h2>
+              <p className="text-[11px] font-mono text-text-muted mt-1">
+                Manage your academic credentials and degrees (rendered in Chapter 05 About section).
+              </p>
+            </div>
+            <button
+              type="button"
+              onClick={handleAddEducation}
+              className="px-3 py-1.5 border border-border rounded text-xs font-mono hover:bg-neutral-100 flex items-center gap-1.5 cursor-pointer"
+            >
+              <span>+</span> Add Education
+            </button>
+          </div>
+
+          <div className="space-y-4 pt-2">
+            {education.length === 0 ? (
+              <p className="text-xs font-mono text-text-muted italic py-4 text-center border border-dashed border-border rounded">
+                No education entries yet. Click &quot;+ Add Education&quot; to add one.
+              </p>
+            ) : (
+              education.map((edu, index) => (
+                <div
+                  key={edu.id || index}
+                  className="p-4 border border-border rounded bg-[#FAFAF8] space-y-3"
+                >
+                  <div className="flex items-center justify-between border-b border-border/60 pb-2">
+                    <span className="type-label text-[11px] font-mono text-text-muted font-semibold">
+                      CREDENTIAL #{String(index + 1).padStart(2, "0")}
+                    </span>
+                    <button
+                      type="button"
+                      onClick={() => handleRemoveEducation(index)}
+                      className="text-xs font-mono text-red-500 hover:text-red-700 cursor-pointer"
+                    >
+                      ✕ Remove
+                    </button>
+                  </div>
+
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <div className="space-y-1">
+                      <label className="type-label text-[10px] font-mono text-text-muted">
+                        DEGREE / FIELD OF STUDY *
+                      </label>
+                      <input
+                        type="text"
+                        value={edu.degree}
+                        onChange={(e) => handleUpdateEducation(index, "degree", e.target.value)}
+                        placeholder="e.g. B.Sc. in Computer Science & Engineering"
+                        className="w-full text-xs font-mono p-2 border border-border rounded bg-background"
+                      />
+                    </div>
+                    <div className="space-y-1">
+                      <label className="type-label text-[10px] font-mono text-text-muted">
+                        INSTITUTION / UNIVERSITY *
+                      </label>
+                      <input
+                        type="text"
+                        value={edu.institution}
+                        onChange={(e) => handleUpdateEducation(index, "institution", e.target.value)}
+                        placeholder="e.g. University of Dhaka, Bangladesh"
+                        className="w-full text-xs font-mono p-2 border border-border rounded bg-background"
+                      />
+                    </div>
+                  </div>
+
+                  <div className="space-y-1">
+                    <label className="type-label text-[10px] font-mono text-text-muted">
+                      PERIOD / TIMELINE
+                    </label>
+                    <input
+                      type="text"
+                      value={edu.period}
+                      onChange={(e) => handleUpdateEducation(index, "period", e.target.value)}
+                      placeholder="e.g. 2020 — 2024"
+                      className="w-full text-xs font-mono p-2 border border-border rounded bg-background"
+                    />
+                  </div>
+
+                  <div className="space-y-1">
+                    <label className="type-label text-[10px] font-mono text-text-muted">
+                      ACADEMIC FOCUS &amp; COURSEWORK (Optional)
+                    </label>
+                    <textarea
+                      rows={2}
+                      value={edu.description || ""}
+                      onChange={(e) => handleUpdateEducation(index, "description", e.target.value)}
+                      placeholder="Focus on Human-Computer Interaction, Front-End Architecture, Design Systems..."
+                      className="w-full text-xs font-mono p-2 border border-border rounded bg-background"
+                    />
+                  </div>
+                </div>
+              ))
+            )}
+          </div>
+        </div>
+
+        {/* SECTION 7: CONFIRMED TOOLS */}
         <div className="bg-background border border-border p-6 rounded space-y-3">
           <h2 className="type-label text-xs uppercase tracking-wider text-foreground">
             Confirmed Tooling &amp; Software Stack
@@ -451,7 +743,7 @@ export default function AdminSettingsPage() {
           />
         </div>
 
-        {/* SECTION 6: CV FILE UPLOAD (PDF) */}
+        {/* SECTION 8: CV FILE UPLOAD (PDF) */}
         <div className="bg-[#F8F7F4] border border-border p-6 rounded space-y-3">
           <h2 className="type-label text-xs uppercase tracking-wider text-foreground">
             Curriculum Vitae (PDF)

@@ -25,6 +25,23 @@ export interface ServiceItem {
   deliverables: string[];
 }
 
+export interface ExperienceItem {
+  id: string;
+  role: string;
+  company: string;
+  location?: string;
+  period: string;
+  description: string;
+}
+
+export interface EducationItem {
+  id: string;
+  degree: string;
+  institution: string;
+  period: string;
+  description?: string;
+}
+
 export const PORTFOLIO_DATA = {
   identity: {
     fullName: "Siful Islam Zehan",
@@ -34,7 +51,7 @@ export const PORTFOLIO_DATA = {
     bio: "I work across UI/UX design, website design, product interfaces, and front-end implementation to create meaningful digital experiences.",
     location: "Bangladesh",
     coordinates: "",
-    email: "sifulislamzehan@gmail.com",
+    email: "hello@sifulislamzehan.dev",
     availability: "Available for freelance work • 2026",
   },
 
@@ -166,4 +183,36 @@ export const PORTFOLIO_DATA = {
       ],
     },
   ] as ServiceItem[],
-} as const;
+
+  experiences: [
+    {
+      id: "exp-1",
+      role: "UI/UX Designer & Front-End Designer",
+      company: "Independent Practice / Client Collaborations",
+      location: "Dhaka, Bangladesh",
+      period: "2023 — Present",
+      description:
+        "Designing human-centered digital products, responsive web experiences, design systems, and functional front-end interfaces with React, Next.js, and modern CSS.",
+    },
+    {
+      id: "exp-2",
+      role: "Product & SaaS Designer",
+      company: "Digital Product Initiatives",
+      location: "Remote",
+      period: "2022 — 2023",
+      description:
+        "Created scalable SaaS dashboards, design tokens, interactive prototypes, and intuitive user flows for complex workflows.",
+    },
+  ] as ExperienceItem[],
+
+  education: [
+    {
+      id: "edu-1",
+      degree: "Computer Science & Engineering / Design Studies",
+      institution: "Dhaka, Bangladesh",
+      period: "2020 — 2024",
+      description:
+        "Focus on human-computer interaction, visual communication, front-end architecture, and digital product design.",
+    },
+  ] as EducationItem[],
+};

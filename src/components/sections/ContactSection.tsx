@@ -436,8 +436,8 @@ export const ContactSection: React.FC = () => {
                     <p>✕ {errorMessage}</p>
                     <p className="text-[11px] text-[#85827B]">
                       Your message has been preserved. You can also write directly to:{" "}
-                      <a href="mailto:sisamasri@gmail.com" className="text-white underline">
-                        sisamasri@gmail.com
+                      <a href="mailto:hello@sifulislamzehan.dev" className="text-white underline">
+                        hello@sifulislamzehan.dev
                       </a>
                     </p>
                   </div>

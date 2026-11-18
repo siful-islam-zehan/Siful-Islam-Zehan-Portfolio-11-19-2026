@@ -62,10 +62,10 @@ export default function NotFound() {
         <div>
           LOST? REACH OUT:{" "}
           <a
-            href="mailto:sifulislamzehan@gmail.com"
+            href="mailto:hello@sifulislamzehan.dev"
             className="text-foreground underline hover:opacity-60"
           >
-            sifulislamzehan@gmail.com
+            hello@sifulislamzehan.dev
           </a>
         </div>
       </div>

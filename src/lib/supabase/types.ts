@@ -50,6 +50,23 @@ export interface DbDevelopedWebsite {
   updated_at: string;
 }
 
+export interface ExperienceItem {
+  id: string;
+  role: string;
+  company: string;
+  location?: string;
+  period: string;
+  description?: string;
+}
+
+export interface EducationItem {
+  id: string;
+  degree: string;
+  institution: string;
+  period: string;
+  description?: string;
+}
+
 export interface DbSiteSettings {
   id: number;
   email: string;
@@ -77,5 +94,7 @@ export interface DbSiteSettings {
     deliverables: string[];
   }>;
   tools: string[];
+  experiences?: ExperienceItem[];
+  education?: EducationItem[];
   updated_at: string;
 }

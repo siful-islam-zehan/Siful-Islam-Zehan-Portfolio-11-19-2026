@@ -7,14 +7,16 @@ import { ContactSection } from "@/components/sections/ContactSection";
 import {
   getPublishedDesignProjects,
   getPublishedDevelopedWebsites,
+  getSiteSettings,
 } from "@/lib/content";
 
 export const revalidate = 60; // Revalidate every 60 seconds (ISR)
 
 export default async function HomePage() {
-  const [designProjects, developedWebsites] = await Promise.all([
+  const [designProjects, developedWebsites, siteSettings] = await Promise.all([
     getPublishedDesignProjects(),
     getPublishedDevelopedWebsites(),
+    getSiteSettings(),
   ]);
 
   return (
@@ -32,7 +34,11 @@ export default async function HomePage() {
       <WhatIDo />
 
       {/* 05 About (Philosophy, Biography & Tools) */}
-      <AboutSection />
+      <AboutSection
+        experiences={siteSettings.experiences}
+        education={siteSettings.education}
+        tools={siteSettings.tools as string[]}
+      />
 
       {/* 06 Contact (Inquiries, Form & Footer Marquee) */}
       <ContactSection />

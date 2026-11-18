@@ -20,6 +20,8 @@ export interface SiteSettingsData {
   socials: typeof PORTFOLIO_DATA.socials;
   tools: readonly string[] | string[];
   services: typeof PORTFOLIO_DATA.services;
+  experiences: typeof PORTFOLIO_DATA.experiences;
+  education: typeof PORTFOLIO_DATA.education;
   phone?: string;
   cvUrl?: string;
   heroLine1: string;
@@ -235,6 +237,8 @@ export async function getSiteSettings(): Promise<SiteSettingsData> {
       socials: socials.length > 0 ? socials : PORTFOLIO_DATA.socials,
       tools: db.tools && db.tools.length > 0 ? db.tools : PORTFOLIO_DATA.tools,
       services: db.services && db.services.length > 0 ? (db.services as any) : PORTFOLIO_DATA.services,
+      experiences: (db.experiences && db.experiences.length > 0) ? (db.experiences as any) : PORTFOLIO_DATA.experiences,
+      education: (db.education && db.education.length > 0) ? (db.education as any) : PORTFOLIO_DATA.education,
       phone: db.phone || undefined,
       cvUrl: db.cv_url || undefined,
       heroLine1: db.hero_headline_line1 || "Designing digital",

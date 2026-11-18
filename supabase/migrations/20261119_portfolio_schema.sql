@@ -77,7 +77,7 @@ create trigger tr_developed_websites_updated_at
 -- ==============================================================================
 create table if not exists public.site_settings (
   id integer primary key default 1 check (id = 1),
-  email text not null default 'sifulislamzehan@gmail.com',
+  email text not null default 'hello@sifulislamzehan.dev',
   phone text default '',
   location text not null default 'Dhaka, Bangladesh',
   coordinates text default '23.8103° N, 90.4125° E',
@@ -95,6 +95,8 @@ create table if not exists public.site_settings (
   short_bio text not null default 'I work across UI/UX design, website design, product interfaces, and front-end implementation to create meaningful digital experiences.',
   about_text text not null default 'Clean design isn''t just visual, it''s how things work.',
   services jsonb not null default '[]'::jsonb,
+  experiences jsonb not null default '[]'::jsonb,
+  education jsonb not null default '[]'::jsonb,
   tools text[] not null default array[
     'Figma',
     'Adobe Photoshop',
@@ -236,10 +238,12 @@ insert into public.site_settings (
   short_bio,
   about_text,
   services,
+  experiences,
+  education,
   tools
 ) values (
   1,
-  'sifulislamzehan@gmail.com',
+  'hello@sifulislamzehan.dev',
   '',
   'Bangladesh',
   '',
@@ -257,6 +261,13 @@ insert into public.site_settings (
   '',
   '',
   '[]'::jsonb,
+  '[
+    {"id":"exp-1","role":"UI/UX Designer & Front-End Designer","company":"Independent Practice / Client Collaborations","location":"Dhaka, Bangladesh","period":"2023 — Present","description":"Designing human-centered digital products, responsive web experiences, design systems, and functional front-end interfaces with React, Next.js, and modern CSS."},
+    {"id":"exp-2","role":"Product & SaaS Designer","company":"Digital Product Initiatives","location":"Remote","period":"2022 — 2023","description":"Created scalable SaaS dashboards, design tokens, interactive prototypes, and intuitive user flows for complex workflows."}
+  ]'::jsonb,
+  '[
+    {"id":"edu-1","degree":"Computer Science & Engineering / Design Studies","institution":"Dhaka, Bangladesh","period":"2020 — 2024","description":"Focus on human-computer interaction, visual communication, front-end architecture, and digital product design."}
+  ]'::jsonb,
   array[]::text[]
 )
 on conflict (id) do update set
@@ -273,6 +284,8 @@ on conflict (id) do update set
   short_bio = excluded.short_bio,
   about_text = excluded.about_text,
   services = excluded.services,
+  experiences = excluded.experiences,
+  education = excluded.education,
   tools = excluded.tools;
 
 -- 3 Allowed Websites seeded as DRAFTS with contribution_verified = false

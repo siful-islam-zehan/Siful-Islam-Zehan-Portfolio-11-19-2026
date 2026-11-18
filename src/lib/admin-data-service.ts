@@ -127,7 +127,7 @@ function getInitialLocalWebsites(): DbDevelopedWebsite[] {
 function getInitialLocalSettings(): DbSiteSettings {
   return {
     id: 1,
-    email: "sifulislamzehan@gmail.com",
+    email: "hello@sifulislamzehan.dev",
     phone: "",
     location: "Bangladesh",
     coordinates: "",
@@ -146,6 +146,8 @@ function getInitialLocalSettings(): DbSiteSettings {
     about_text: "",
     services: [],
     tools: [],
+    experiences: (PORTFOLIO_DATA as any).experiences || [],
+    education: (PORTFOLIO_DATA as any).education || [],
     updated_at: new Date().toISOString(),
   };
 }
@@ -444,10 +446,17 @@ export async function fetchSiteSettings(): Promise<DbSiteSettings> {
 export async function saveSiteSettings(settings: Partial<DbSiteSettings>): Promise<DbSiteSettings> {
   const now = new Date().toISOString();
 
+  // Always save locally first for resilience
+  const current = await fetchSiteSettings();
+  const updated = { ...current, ...settings, updated_at: now } as DbSiteSettings;
+  if (typeof window !== "undefined") {
+    localStorage.setItem(STORAGE_KEY_SETTINGS, JSON.stringify(updated));
+  }
+
   if (isSupabaseConfigured()) {
     const supabase = createClient();
     if (supabase) {
-      const { data, error } = await supabase
+      let { data, error } = await supabase
         .from("site_settings")
         .upsert({
           id: 1,
@@ -457,15 +466,27 @@ export async function saveSiteSettings(settings: Partial<DbSiteSettings>): Promi
         .select()
         .single();
 
+      // If column doesn't exist in Supabase yet, strip experiences & education and retry
+      if (error && (error.message.includes("column") || error.code === "PGRST204" || error.code === "42703")) {
+        const { experiences, education, ...safeSettings } = settings;
+        const retry = await supabase
+          .from("site_settings")
+          .upsert({
+            id: 1,
+            ...safeSettings,
+            updated_at: now,
+          })
+          .select()
+          .single();
+
+        if (retry.error) throw new Error(retry.error.message);
+        return { ...(retry.data as DbSiteSettings), experiences, education };
+      }
+
       if (error) throw new Error(error.message);
       return data as DbSiteSettings;
     }
   }
 
-  const current = await fetchSiteSettings();
-  const updated = { ...current, ...settings, updated_at: now };
-  if (typeof window !== "undefined") {
-    localStorage.setItem(STORAGE_KEY_SETTINGS, JSON.stringify(updated));
-  }
   return updated;
 }

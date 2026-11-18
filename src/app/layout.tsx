@@ -113,7 +113,7 @@ const jsonLd = {
       jobTitle: "UI/UX Designer & Front-End Designer",
       description:
         "Designing digital experiences. Bringing ideas to life. I work across UI/UX design, website design, product interfaces, and front-end implementation to create meaningful digital experiences.",
-      email: "mailto:sifulislamzehan@gmail.com",
+      email: "mailto:hello@sifulislamzehan.dev",
       address: {
         "@type": "PostalAddress",
         addressLocality: "Dhaka",
