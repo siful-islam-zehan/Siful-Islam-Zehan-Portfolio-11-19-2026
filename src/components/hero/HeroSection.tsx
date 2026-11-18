@@ -13,12 +13,33 @@ import { FloatingWebsiteCard } from "@/components/hero/FloatingWebsiteCard";
 import { AvailabilityPill } from "@/components/hero/AvailabilityPill";
 import { ScrollCue } from "@/components/hero/ScrollCue";
 import { isReducedMotion, MOTION_TOKENS } from "@/utils/animation";
+import { SocialLink } from "@/data/portfolio";
 
 if (typeof window !== "undefined") {
   gsap.registerPlugin(ScrollTrigger);
 }
 
-export const HeroSection: React.FC = () => {
+interface HeroSectionProps {
+  socials?: SocialLink[];
+  availability?: string;
+  location?: string;
+  email?: string;
+  headlineLine1?: string;
+  headlineLine2?: string;
+  tagline?: string;
+  bio?: string;
+}
+
+export const HeroSection: React.FC<HeroSectionProps> = ({
+  socials,
+  availability,
+  location,
+  email,
+  headlineLine1,
+  headlineLine2,
+  tagline,
+  bio,
+}) => {
   const sectionRef = useRef<HTMLElement>(null);
   const portraitWrapperRef = useRef<HTMLDivElement>(null);
   const bgTextRef = useRef<HTMLDivElement>(null);
@@ -181,8 +202,8 @@ export const HeroSection: React.FC = () => {
       className="relative w-full min-h-screen bg-background text-foreground overflow-hidden flex flex-col justify-between pt-24 pb-20 border-b border-border"
     >
       {/* Navigation Layer */}
-      <PillNav />
-      <SideSocials />
+      <PillNav socials={socials} email={email} location={location} />
+      <SideSocials socials={socials} />
       <TimelineProgress activeSection={1} />
 
       {/* Layer 1: Oversized "ZEHAN" Background Text */}
@@ -201,9 +222,14 @@ export const HeroSection: React.FC = () => {
           {/* Left Column: Headline, Bio & CTAs (Span 6) */}
           <div ref={headlineRef} className="col-span-6 z-20 pb-4">
             <div ref={availabilityPillRef} className="mb-6">
-              <AvailabilityPill />
+              <AvailabilityPill text={availability} />
             </div>
-            <HeroHeadline />
+            <HeroHeadline
+              line1={headlineLine1}
+              line2={headlineLine2}
+              tagline={tagline}
+              bio={bio}
+            />
           </div>
 
           {/* Center-Right Column: Real Portrait + Interactive Lens (Span 5) */}
@@ -238,9 +264,15 @@ export const HeroSection: React.FC = () => {
           {/* Top: Availability & Headline */}
           <div className="mb-6">
             <div className="mb-4">
-              <AvailabilityPill />
+              <AvailabilityPill text={availability} />
             </div>
-            <HeroHeadline isSecondary={true} />
+            <HeroHeadline
+              isSecondary={true}
+              line1={headlineLine1}
+              line2={headlineLine2}
+              tagline={tagline}
+              bio={bio}
+            />
           </div>
 
           {/* Center: Portrait with Cropped "ZEHAN" behind & interactive/auto-animated lens */}

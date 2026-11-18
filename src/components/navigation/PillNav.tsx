@@ -2,17 +2,31 @@
 
 import React, { useState, useEffect, useRef } from "react";
 import { Link } from "@/components/ui/Link";
-import { PORTFOLIO_DATA } from "@/data/portfolio";
+import { PORTFOLIO_DATA, SocialLink } from "@/data/portfolio";
 
 interface PillNavProps {
   className?: string;
+  socials?: SocialLink[];
+  email?: string;
+  location?: string;
 }
 
-export const PillNav: React.FC<PillNavProps> = ({ className = "" }) => {
+export const PillNav: React.FC<PillNavProps> = ({
+  className = "",
+  socials,
+  email,
+  location,
+}) => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [isDark, setIsDark] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
   const toggleBtnRef = useRef<HTMLButtonElement>(null);
+
+  const activeEmail = email || PORTFOLIO_DATA.identity.email;
+  const activeLocation = location || PORTFOLIO_DATA.identity.location;
+  const activeSocials = (socials && socials.length > 0 ? socials : PORTFOLIO_DATA.socials).filter(
+    (s) => !s.isPlaceholder && s.url
+  );
 
   // Close menu on route or anchor click
   const handleNavClick = () => {
@@ -235,34 +249,32 @@ export const PillNav: React.FC<PillNavProps> = ({ className = "" }) => {
             <div className="flex justify-between items-center">
               <span>DIRECT EMAIL:</span>
               <a
-                href={`mailto:${PORTFOLIO_DATA.identity.email}`}
+                href={`mailto:${activeEmail}`}
                 className="text-foreground underline truncate max-w-[200px]"
               >
-                {PORTFOLIO_DATA.identity.email}
+                {activeEmail}
               </a>
             </div>
 
             <div className="flex items-center justify-between pt-2">
               <span>LOCATION:</span>
-              <span className="text-foreground">{PORTFOLIO_DATA.identity.location}</span>
+              <span className="text-foreground">{activeLocation}</span>
             </div>
 
             <div className="flex items-center gap-4 pt-2 flex-wrap">
-              {PORTFOLIO_DATA.socials
-                .filter((s) => !s.isPlaceholder && s.url)
-                .map((s, sIdx) => (
-                  <React.Fragment key={s.platform}>
-                    {sIdx > 0 && <span>•</span>}
-                    <a
-                      href={s.url}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="text-foreground underline"
-                    >
-                      {s.platform}
-                    </a>
-                  </React.Fragment>
-                ))}
+              {activeSocials.map((s, sIdx) => (
+                <React.Fragment key={s.platform}>
+                  {sIdx > 0 && <span>•</span>}
+                  <a
+                    href={s.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-foreground underline"
+                  >
+                    {s.platform}
+                  </a>
+                </React.Fragment>
+              ))}
             </div>
           </div>
         </div>

@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useRef, useEffect } from "react";
-import { PORTFOLIO_DATA } from "@/data/portfolio";
+import { PORTFOLIO_DATA, SocialLink } from "@/data/portfolio";
 import { MagneticButton } from "@/components/ui/MagneticButton";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
@@ -13,9 +13,17 @@ if (typeof window !== "undefined") {
 
 interface ContactSectionProps {
   email?: string;
+  socials?: SocialLink[];
+  location?: string;
+  availability?: string;
 }
 
-export const ContactSection: React.FC<ContactSectionProps> = ({ email }) => {
+export const ContactSection: React.FC<ContactSectionProps> = ({
+  email,
+  socials,
+  location,
+  availability,
+}) => {
   const sectionRef = useRef<HTMLElement>(null);
   const [formData, setFormData] = useState({
     name: "",
@@ -31,6 +39,11 @@ export const ContactSection: React.FC<ContactSectionProps> = ({ email }) => {
   const [validationErrors, setValidationErrors] = useState<{ [key: string]: string }>({});
 
   const emailAddress = email || PORTFOLIO_DATA.identity.email || "hello@sifulislamzehan.dev";
+  const activeSocials = socials && socials.length > 0 ? socials : PORTFOLIO_DATA.socials;
+  const availabilityText = availability || "AVAILABLE FOR FREELANCE • 2026";
+  const locationText = location
+    ? `Based in ${location}. Working with global design teams and founders.`
+    : "Based in Dhaka, Bangladesh (UTC+6). Working with global design teams and founders.";
 
   const copyEmail = () => {
     navigator.clipboard.writeText(emailAddress);
@@ -479,35 +492,37 @@ export const ContactSection: React.FC<ContactSectionProps> = ({ email }) => {
 
             {/* Social Channels List */}
             <div className="border border-white/15 divide-y divide-white/10 bg-[#1f1f1f]/40">
-              {PORTFOLIO_DATA.socials.map((s) => (
-                <div key={s.platform} className="p-4 flex items-center justify-between">
-                  <div>
-                    <span className="type-label text-xs text-dark-foreground block">
-                      {s.platform}
-                    </span>
-                    <span className="type-caption font-mono text-[11px] text-[#85827B]">
-                      {s.handle}
-                    </span>
+              {activeSocials
+                .filter((s) => !s.isPlaceholder && s.url)
+                .map((s) => (
+                  <div key={s.platform} className="p-4 flex items-center justify-between">
+                    <div>
+                      <span className="type-label text-xs text-dark-foreground block">
+                        {s.platform}
+                      </span>
+                      <span className="type-caption font-mono text-[11px] text-[#85827B]">
+                        {s.handle}
+                      </span>
+                    </div>
+                    <a
+                      href={s.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="type-label text-xs text-[#85827B] hover:text-dark-foreground transition-colors font-mono"
+                    >
+                      VISIT ↗
+                    </a>
                   </div>
-                  <a
-                    href={s.url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="type-label text-xs text-[#85827B] hover:text-dark-foreground transition-colors"
-                  >
-                    {s.isPlaceholder ? "PLACEHOLDER ↗" : "VISIT ↗"}
-                  </a>
-                </div>
-              ))}
+                ))}
             </div>
 
             {/* Location & Availability Card */}
             <div className="border border-white/15 p-6 bg-[#1f1f1f]/30 space-y-2 font-mono text-xs text-[#85827B]">
               <div className="flex items-center gap-2 text-dark-foreground">
                 <span className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
-                <span className="type-label text-xs">AVAILABLE FOR FREELANCE • 2026</span>
+                <span className="type-label text-xs uppercase">{availabilityText}</span>
               </div>
-              <p>Based in Dhaka, Bangladesh (UTC+6). Working with global design teams and founders.</p>
+              <p>{locationText}</p>
             </div>
           </div>
         </div>

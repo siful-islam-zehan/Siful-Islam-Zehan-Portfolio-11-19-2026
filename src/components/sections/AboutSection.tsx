@@ -15,12 +15,22 @@ interface AboutSectionProps {
   experiences?: ExperienceItem[];
   education?: EducationItem[];
   tools?: string[];
+  location?: string;
+  coordinates?: string;
+  availability?: string;
+  aboutText?: string;
+  shortBio?: string;
 }
 
 export const AboutSection: React.FC<AboutSectionProps> = ({
   experiences = PORTFOLIO_DATA.experiences || [],
   education = PORTFOLIO_DATA.education || [],
   tools = PORTFOLIO_DATA.tools,
+  location,
+  coordinates,
+  availability,
+  aboutText,
+  shortBio,
 }) => {
   const sectionRef = useRef<HTMLElement>(null);
   const portraitRef = useRef<HTMLDivElement>(null);
@@ -182,11 +192,11 @@ export const AboutSection: React.FC<AboutSectionProps> = ({
             <div className="border border-border p-6 bg-background space-y-3 font-mono text-xs">
               <div className="flex justify-between items-baseline border-b border-border pb-2">
                 <span className="text-text-muted">LOCATION:</span>
-                <span className="text-foreground">Dhaka, Bangladesh</span>
+                <span className="text-foreground">{location || "Dhaka, Bangladesh"}</span>
               </div>
               <div className="flex justify-between items-baseline border-b border-border pb-2">
                 <span className="text-text-muted">COORDINATES:</span>
-                <span className="text-foreground">23.8103° N, 90.4125° E</span>
+                <span className="text-foreground">{coordinates || "23.8103° N, 90.4125° E"}</span>
               </div>
               <div className="flex justify-between items-baseline border-b border-border pb-2">
                 <span className="text-text-muted">PRIMARY ROLE:</span>
@@ -194,7 +204,7 @@ export const AboutSection: React.FC<AboutSectionProps> = ({
               </div>
               <div className="flex justify-between items-baseline">
                 <span className="text-text-muted">AVAILABILITY:</span>
-                <span className="text-foreground">Open for Projects • 2026</span>
+                <span className="text-foreground">{availability || "Open for Projects • 2026"}</span>
               </div>
             </div>
           </div>
@@ -206,7 +216,7 @@ export const AboutSection: React.FC<AboutSectionProps> = ({
             {/* Signature Quote */}
             <div className="about-quote-box border-l-2 border-foreground pl-6 sm:pl-8 py-2">
               <blockquote className="type-display-l font-serif italic text-foreground leading-tight">
-                {`"Clean design isn't just visual, it's how things work."`
+                {(aboutText || `"Clean design isn't just visual, it's how things work."`)
                   .split(" ")
                   .map((word, wIdx) => (
                     <span

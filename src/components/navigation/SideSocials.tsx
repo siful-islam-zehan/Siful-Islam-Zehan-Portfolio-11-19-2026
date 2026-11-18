@@ -1,10 +1,15 @@
 "use client";
 
 import React from "react";
-import { PORTFOLIO_DATA } from "@/data/portfolio";
+import { PORTFOLIO_DATA, SocialLink } from "@/data/portfolio";
 
-export const SideSocials: React.FC = () => {
-  const activeSocials = PORTFOLIO_DATA.socials.filter((s) => !s.isPlaceholder && s.url);
+interface SideSocialsProps {
+  socials?: SocialLink[];
+}
+
+export const SideSocials: React.FC<SideSocialsProps> = ({ socials }) => {
+  const list = socials && socials.length > 0 ? socials : PORTFOLIO_DATA.socials;
+  const activeSocials = list.filter((s) => !s.isPlaceholder && s.url);
 
   if (activeSocials.length === 0) return null;
 

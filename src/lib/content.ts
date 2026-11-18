@@ -210,14 +210,67 @@ export async function getSiteSettings(): Promise<SiteSettingsData> {
 
     const db = data as DbSiteSettings;
 
-    // Filter socials to omit empty links
-    const socials = [
-      db.behance ? { platform: "Behance", url: db.behance, handle: "@zehan", isPlaceholder: false } : null,
-      db.github ? { platform: "GitHub", url: db.github, handle: "siful-islam-zehan", isPlaceholder: false } : null,
-      db.linkedin ? { platform: "LinkedIn", url: db.linkedin, handle: "Zehan", isPlaceholder: false } : null,
-      db.dribbble ? { platform: "Dribbble", url: db.dribbble, handle: "@zehan", isPlaceholder: false } : null,
-      db.instagram ? { platform: "Instagram", url: db.instagram, handle: "@zehan", isPlaceholder: false } : null,
-    ].filter(Boolean) as typeof PORTFOLIO_DATA.socials;
+    // Helper to extract clean display handles from platform URLs
+    const extractHandle = (platform: string, url: string): string => {
+      if (!url) return "";
+      try {
+        const clean = url.trim().replace(/^https?:\/\/(www\.)?/, "").replace(/\/$/, "");
+        const parts = clean.split("/").filter(Boolean);
+        if (parts.length > 1) {
+          const last = parts[parts.length - 1];
+          const user = last.split("?")[0].split("#")[0];
+          return platform === "LinkedIn" ? `in/${user}` : `@${user}`;
+        }
+        return `@${clean}`;
+      } catch {
+        return platform;
+      }
+    };
+
+    // Construct dynamic socials from verified admin settings
+    const dynamicSocials: typeof PORTFOLIO_DATA.socials = [];
+    if (db.linkedin && db.linkedin.trim()) {
+      dynamicSocials.push({
+        platform: "LinkedIn",
+        url: db.linkedin.trim(),
+        handle: extractHandle("LinkedIn", db.linkedin),
+        isPlaceholder: false,
+      });
+    }
+    if (db.behance && db.behance.trim()) {
+      dynamicSocials.push({
+        platform: "Behance",
+        url: db.behance.trim(),
+        handle: extractHandle("Behance", db.behance),
+        isPlaceholder: false,
+      });
+    }
+    if (db.dribbble && db.dribbble.trim()) {
+      dynamicSocials.push({
+        platform: "Dribbble",
+        url: db.dribbble.trim(),
+        handle: extractHandle("Dribbble", db.dribbble),
+        isPlaceholder: false,
+      });
+    }
+    if (db.github && db.github.trim()) {
+      dynamicSocials.push({
+        platform: "GitHub",
+        url: db.github.trim(),
+        handle: extractHandle("GitHub", db.github),
+        isPlaceholder: false,
+      });
+    }
+    if (db.instagram && db.instagram.trim()) {
+      dynamicSocials.push({
+        platform: "Instagram",
+        url: db.instagram.trim(),
+        handle: extractHandle("Instagram", db.instagram),
+        isPlaceholder: false,
+      });
+    }
+
+    const socials = dynamicSocials.length > 0 ? dynamicSocials : PORTFOLIO_DATA.socials;
 
     return {
       identity: {
