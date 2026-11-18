@@ -41,7 +41,7 @@ export default async function HomePage() {
       />
 
       {/* 06 Contact (Inquiries, Form & Footer Marquee) */}
-      <ContactSection />
+      <ContactSection email={siteSettings.identity.email} />
     </>
   );
 }

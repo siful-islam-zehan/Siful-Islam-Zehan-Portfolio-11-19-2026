@@ -425,3 +425,44 @@ insert into public.design_projects (
   false
 )
 on conflict (slug) do nothing;
+
+-- ==============================================================================
+-- 6. TABLE: CONTACT MESSAGES (Website Inquiries & Project Notes)
+-- ==============================================================================
+create table if not exists public.contact_messages (
+  id uuid primary key default gen_random_uuid(),
+  name text not null,
+  email text not null,
+  subject text not null,
+  message text not null,
+  is_read boolean not null default false,
+  created_at timestamptz not null default now()
+);
+
+alter table public.contact_messages enable row level security;
+
+-- Public can submit messages
+drop policy if exists "Public insert contact messages" on public.contact_messages;
+create policy "Public insert contact messages"
+  on public.contact_messages
+  for insert
+  with check (true);
+
+-- Authenticated admins can view, update and delete messages
+drop policy if exists "Admin read contact messages" on public.contact_messages;
+create policy "Admin read contact messages"
+  on public.contact_messages
+  for select
+  using (auth.role() = 'authenticated');
+
+drop policy if exists "Admin update contact messages" on public.contact_messages;
+create policy "Admin update contact messages"
+  on public.contact_messages
+  for update
+  using (auth.role() = 'authenticated');
+
+drop policy if exists "Admin delete contact messages" on public.contact_messages;
+create policy "Admin delete contact messages"
+  on public.contact_messages
+  for delete
+  using (auth.role() = 'authenticated');

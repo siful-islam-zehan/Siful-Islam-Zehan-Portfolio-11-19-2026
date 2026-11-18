@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { createClient } from "@supabase/supabase-js";
 
 export const dynamic = "force-dynamic";
 
@@ -56,7 +57,42 @@ export async function POST(request: Request) {
       );
     }
 
-    // 6. Resolve Formspree endpoint from environment variables
+    let savedToSupabase = false;
+
+    // 6. Attempt saving directly to Supabase table (public.contact_messages)
+    const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+    const supabaseKey =
+      process.env.SUPABASE_SERVICE_ROLE_KEY ||
+      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+
+    if (
+      supabaseUrl &&
+      supabaseKey &&
+      supabaseUrl !== "https://your-project-ref.supabase.co"
+    ) {
+      try {
+        const supabase = createClient(supabaseUrl, supabaseKey);
+        const { error: dbError } = await supabase.from("contact_messages").insert([
+          {
+            name: name.trim(),
+            email: email.trim(),
+            subject: subject.trim(),
+            message: message.trim(),
+            is_read: false,
+            created_at: new Date().toISOString(),
+          },
+        ]);
+        if (!dbError) {
+          savedToSupabase = true;
+        } else {
+          console.warn("Supabase contact_messages insert notice:", dbError.message);
+        }
+      } catch (err) {
+        console.warn("Supabase client connection notice:", err);
+      }
+    }
+
+    // 7. Resolve Formspree endpoint from environment variables
     const formspreeEndpoint =
       process.env.FORMSPREE_ENDPOINT ||
       process.env.NEXT_PUBLIC_FORMSPREE_ENDPOINT ||
@@ -67,61 +103,61 @@ export async function POST(request: Request) {
         ? `https://formspree.io/f/${process.env.NEXT_PUBLIC_FORMSPREE_FORM_ID}`
         : null);
 
-    if (!formspreeEndpoint || formspreeEndpoint.trim() === "") {
-      return NextResponse.json(
-        {
-          error:
-            "Something went wrong. Please try again or contact me directly via email.",
-          unconfigured: true,
-        },
-        { status: 503 }
-      );
+    let sentViaFormspree = false;
+
+    if (formspreeEndpoint && formspreeEndpoint.trim() !== "") {
+      const targetUrl = formspreeEndpoint.startsWith("http")
+        ? formspreeEndpoint.trim()
+        : `https://formspree.io/f/${formspreeEndpoint.trim()}`;
+
+      try {
+        const formspreeRes = await fetch(targetUrl, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Accept: "application/json",
+          },
+          body: JSON.stringify({
+            name: name.trim(),
+            email: email.trim(),
+            _replyto: email.trim(),
+            subject: subject.trim(),
+            message: message.trim(),
+          }),
+        });
+
+        if (formspreeRes.ok) {
+          sentViaFormspree = true;
+        }
+      } catch (fetchErr) {
+        console.warn("Formspree dispatch error:", fetchErr);
+      }
     }
 
-    // Normalize endpoint URL
-    const targetUrl = formspreeEndpoint.startsWith("http")
-      ? formspreeEndpoint.trim()
-      : `https://formspree.io/f/${formspreeEndpoint.trim()}`;
+    // 8. Determine final outcome
+    // If either Supabase storage or Formspree succeeded, confirm success to the sender
+    if (savedToSupabase || sentViaFormspree) {
+      return NextResponse.json({
+        success: true,
+        message:
+          "Your message has been sent successfully. I'll review your note and respond shortly.",
+      });
+    }
 
-    // 7. Dispatch payload to Formspree API
-    const formspreeRes = await fetch(targetUrl, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Accept: "application/json",
+    // If neither Formspree nor Supabase contact_messages succeeded:
+    return NextResponse.json(
+      {
+        error:
+          "Contact messaging service is currently being configured. Please write directly to hello@sifulislamzehan.dev.",
+        unconfigured: true,
       },
-      body: JSON.stringify({
-        name: name.trim(),
-        email: email.trim(),
-        _replyto: email.trim(),
-        subject: subject.trim(),
-        message: message.trim(),
-      }),
-    });
-
-    const responseData = await formspreeRes.json().catch(() => ({}));
-
-    if (!formspreeRes.ok) {
-      return NextResponse.json(
-        {
-          error:
-            "Something went wrong. Please try again or contact me directly via email.",
-          details: responseData,
-        },
-        { status: formspreeRes.status }
-      );
-    }
-
-    return NextResponse.json({
-      success: true,
-      message:
-        "Your message has been sent successfully. I'll get back to you as soon as possible.",
-    });
+      { status: 503 }
+    );
   } catch {
     return NextResponse.json(
       {
         error:
-          "Something went wrong. Please try again or contact me directly via email.",
+          "Something went wrong. Please try again or write directly to hello@sifulislamzehan.dev.",
       },
       { status: 500 }
     );

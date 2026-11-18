@@ -11,7 +11,11 @@ if (typeof window !== "undefined") {
   gsap.registerPlugin(ScrollTrigger);
 }
 
-export const ContactSection: React.FC = () => {
+interface ContactSectionProps {
+  email?: string;
+}
+
+export const ContactSection: React.FC<ContactSectionProps> = ({ email }) => {
   const sectionRef = useRef<HTMLElement>(null);
   const [formData, setFormData] = useState({
     name: "",
@@ -26,7 +30,7 @@ export const ContactSection: React.FC = () => {
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [validationErrors, setValidationErrors] = useState<{ [key: string]: string }>({});
 
-  const emailAddress = PORTFOLIO_DATA.identity.email;
+  const emailAddress = email || PORTFOLIO_DATA.identity.email || "hello@sifulislamzehan.dev";
 
   const copyEmail = () => {
     navigator.clipboard.writeText(emailAddress);
@@ -436,8 +440,8 @@ export const ContactSection: React.FC = () => {
                     <p>✕ {errorMessage}</p>
                     <p className="text-[11px] text-[#85827B]">
                       Your message has been preserved. You can also write directly to:{" "}
-                      <a href="mailto:hello@sifulislamzehan.dev" className="text-white underline">
-                        hello@sifulislamzehan.dev
+                      <a href={`mailto:${emailAddress}`} className="text-white underline">
+                        {emailAddress}
                       </a>
                     </p>
                   </div>

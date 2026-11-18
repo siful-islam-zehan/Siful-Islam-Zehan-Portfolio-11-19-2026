@@ -41,6 +41,7 @@ export default function AdminNavShell({ children }: { children: React.ReactNode 
     { label: "Overview", href: "/admin" },
     { label: "Design Projects", href: "/admin/projects" },
     { label: "Developed Websites", href: "/admin/websites" },
+    { label: "Messages", href: "/admin/messages" },
     { label: "Site Settings", href: "/admin/settings" },
   ];
 
