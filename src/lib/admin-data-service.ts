@@ -205,15 +205,19 @@ export async function saveDesignProject(
         if (error) throw new Error(error.message);
         return data as DbDesignProject;
       } else {
+        const { id, ...cleanProject } = project;
+        const insertPayload: Record<string, any> = {
+          ...cleanProject,
+          created_at: now,
+          updated_at: now,
+        };
+        if (id) {
+          insertPayload.id = id;
+        }
+
         const { data, error } = await supabase
           .from("design_projects")
-          .insert([
-            {
-              ...project,
-              created_at: now,
-              updated_at: now,
-            },
-          ])
+          .insert([insertPayload])
           .select()
           .single();
 
@@ -330,15 +334,19 @@ export async function saveDevelopedWebsite(
         if (error) throw new Error(error.message);
         return data as DbDevelopedWebsite;
       } else {
+        const { id, ...cleanWebsite } = website;
+        const insertPayload: Record<string, any> = {
+          ...cleanWebsite,
+          created_at: now,
+          updated_at: now,
+        };
+        if (id) {
+          insertPayload.id = id;
+        }
+
         const { data, error } = await supabase
           .from("developed_websites")
-          .insert([
-            {
-              ...website,
-              created_at: now,
-              updated_at: now,
-            },
-          ])
+          .insert([insertPayload])
           .select()
           .single();
 

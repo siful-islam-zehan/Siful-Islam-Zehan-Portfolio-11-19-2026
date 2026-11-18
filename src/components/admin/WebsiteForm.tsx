@@ -89,8 +89,7 @@ export const WebsiteForm: React.FC<WebsiteFormProps> = ({
         .map((t) => t.trim())
         .filter(Boolean);
 
-      const payload = {
-        id: initialData?.id,
+      const payload: any = {
         title: title.trim(),
         live_url: liveUrl.trim(),
         description: description.trim(),
@@ -106,6 +105,10 @@ export const WebsiteForm: React.FC<WebsiteFormProps> = ({
         cover_image: coverItems[0].url,
         screenshot_fallback: coverItems[0].url,
       };
+
+      if (!isNew && initialData?.id) {
+        payload.id = initialData.id;
+      }
 
       const saved = await saveDevelopedWebsite(payload);
       showToast(`Website "${saved.title}" saved successfully!`);

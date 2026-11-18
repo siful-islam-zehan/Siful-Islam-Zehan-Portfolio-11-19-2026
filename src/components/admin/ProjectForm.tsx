@@ -104,8 +104,7 @@ export const ProjectForm: React.FC<ProjectFormProps> = ({
         .map((r) => r.trim())
         .filter(Boolean);
 
-      const payload = {
-        id: initialData?.id,
+      const payload: any = {
         title: title.trim(),
         slug: slug.trim(),
         category: category.trim(),
@@ -120,6 +119,10 @@ export const ProjectForm: React.FC<ProjectFormProps> = ({
         status,
         contribution_verified: contributionVerified,
       };
+
+      if (!isNew && initialData?.id) {
+        payload.id = initialData.id;
+      }
 
       const saved = await saveDesignProject(payload);
       showToast(`Project "${saved.title}" saved successfully!`);
