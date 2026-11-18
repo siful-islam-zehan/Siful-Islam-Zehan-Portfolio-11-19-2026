@@ -1,0 +1,117 @@
+@import './tokens.css';
+@import './typography.css';
+@import './grid.css';
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ==========================================================================
+   GLOBAL RESET & ACCESSIBILITY STYLES
+   ========================================================================== */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  background-color: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-manrope), -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  scroll-behavior: smooth;
+  overflow-x: hidden;
+  max-width: 100vw;
+}
+
+body {
+  min-height: 100vh;
+  background-color: var(--background);
+  color: var(--foreground);
+  overflow-x: hidden;
+  max-width: 100vw;
+  position: relative;
+}
+
+/* Accessibility Focus Visible */
+:focus-visible {
+  outline: 2px solid var(--focus-ring);
+  outline-offset: 3px;
+}
+
+/* Editorial Text Selection */
+::selection {
+  background-color: var(--selection-bg);
+  color: var(--selection-color);
+}
+
+/* Skip Link for Keyboard Navigation */
+.skip-link {
+  position: absolute;
+  top: -100px;
+  left: var(--page-gutter);
+  background-color: var(--dark-background);
+  color: var(--dark-foreground);
+  padding: 0.75rem 1.5rem;
+  z-index: 9999;
+  font-size: 0.875rem;
+  font-weight: 600;
+  border-radius: var(--radius-sm);
+  transition: top var(--duration-fast) var(--ease-editorial);
+}
+
+.skip-link:focus {
+  top: 1rem;
+}
+
+/* Base Link & Button Resets */
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+button {
+  background: none;
+  border: none;
+  color: inherit;
+  font: inherit;
+  cursor: pointer;
+}
+
+/* Image Defaults */
+img, svg, video {
+  display: block;
+  max-width: 100%;
+  height: auto;
+}
+
+/* Micro-Borders */
+.border-b-editorial {
+  border-bottom: 1px solid var(--border);
+}
+
+.border-t-editorial {
+  border-top: 1px solid var(--border);
+}
+
+.border-l-editorial {
+  border-left: 1px solid var(--border);
+}
+
+.border-r-editorial {
+  border-right: 1px solid var(--border);
+}
+
+.border-editorial {
+  border: 1px solid var(--border);
+}
+
+/* Note on Custom Cursor:
+   Per brief Section 4 & Phase 03 instructions:
+   The custom cursor and lens interaction will live in:
+   src/components/animations/CursorLens.tsx
+   It is deferred until Phase 04 / Phase 08.
+*/

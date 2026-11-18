@@ -1,0 +1,66 @@
+:root {
+  /* ==========================================================================
+     COLOR TOKENS (Strict Palette)
+     ========================================================================== */
+  --background: #F3F1EC;
+  --foreground: #171717;
+  --dark-background: #171717;
+  --dark-foreground: #F5F3EE;
+  --secondary-text: #85827B;
+  --border: #DAD7D0;
+
+  /* ==========================================================================
+     SEMANTIC COLOR ALIASES
+     ========================================================================== */
+  --text-primary: var(--foreground);
+  --text-secondary: var(--secondary-text);
+  --text-muted: var(--secondary-text);
+  --surface-main: var(--background);
+  --surface-dark: var(--dark-background);
+  --text-on-dark: var(--dark-foreground);
+  --border-subtle: var(--border);
+  --selection-bg: #171717;
+  --selection-color: #F3F1EC;
+  --focus-ring: #171717;
+
+  /* ==========================================================================
+     SPACING TOKENS (4px Base Scale)
+     ========================================================================== */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-6: 24px;
+  --space-8: 32px;
+  --space-12: 48px;
+  --space-16: 64px;
+  --space-24: 96px;
+  --space-32: 128px;
+  --space-48: 192px;
+
+  /* Fluid Spacing & Layout */
+  --page-gutter: clamp(1rem, 3.5vw, 3rem);
+  --section-padding-y: clamp(4rem, 8vw, 8rem);
+  --container-max: 1440px;
+
+  /* ==========================================================================
+     BORDER & RADIUS TOKENS
+     ========================================================================== */
+  --radius-none: 0px;
+  --radius-sm: 2px;
+  --radius-pill: 9999px;
+  --border-width: 1px;
+  --border-default: 1px solid var(--border);
+  --border-dark: 1px solid rgba(245, 243, 238, 0.15);
+
+  /* ==========================================================================
+     MOTION TOKENS (GSAP Standards)
+     ========================================================================== */
+  --duration-base: 0.9s;
+  --duration-fast: 0.4s;
+  --duration-slow: 1.4s;
+  --ease-editorial: cubic-bezier(0.16, 1, 0.3, 1); /* GSAP power4.out */
+  --ease-smooth: cubic-bezier(0.25, 1, 0.5, 1);
+  --stagger-default: 0.08s;
+  --reveal-distance: 24px;
+}

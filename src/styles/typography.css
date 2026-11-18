@@ -1,0 +1,101 @@
+/* ==========================================================================
+   TYPOGRAPHY SCALE (Fluid Clamp Scale & Editorial Presets)
+   ========================================================================== */
+
+/* Display XXL — Oversized background text (e.g. "ZEHAN") */
+.type-display-xxl {
+  font-family: var(--font-archivo), var(--font-manrope), sans-serif;
+  font-weight: 800;
+  text-transform: uppercase;
+  font-size: clamp(5.5rem, 16vw, 17rem);
+  line-height: 0.82;
+  letter-spacing: -0.04em;
+}
+
+/* Display XL — Primary exhibition statements */
+.type-display-xl {
+  font-family: var(--font-instrument-serif), serif;
+  font-size: clamp(3.25rem, 7.5vw, 6.75rem);
+  line-height: 0.95;
+  letter-spacing: -0.03em;
+}
+
+/* Display L — Asymmetric hero headline */
+.type-display-l {
+  font-family: var(--font-instrument-serif), serif;
+  font-size: clamp(2.5rem, 5.2vw, 4.75rem);
+  line-height: 1.05;
+  letter-spacing: -0.025em;
+}
+
+/* Heading 1 — Chapter titles */
+.type-h1 {
+  font-family: var(--font-instrument-serif), serif;
+  font-size: clamp(2.25rem, 4vw, 3.75rem);
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+}
+
+/* Heading 2 — Section subtitles & project titles */
+.type-h2 {
+  font-family: var(--font-manrope), sans-serif;
+  font-weight: 600;
+  font-size: clamp(1.5rem, 2.8vw, 2.5rem);
+  line-height: 1.2;
+  letter-spacing: -0.02em;
+}
+
+/* Heading 3 — Component subheadings */
+.type-h3 {
+  font-family: var(--font-manrope), sans-serif;
+  font-weight: 500;
+  font-size: clamp(1.2rem, 1.8vw, 1.65rem);
+  line-height: 1.3;
+  letter-spacing: -0.015em;
+}
+
+/* Body Large — Editorial lead / intro paragraphs */
+.type-body-l {
+  font-family: var(--font-manrope), sans-serif;
+  font-size: clamp(1.0625rem, 1.25vw, 1.25rem);
+  line-height: 1.55;
+  letter-spacing: -0.01em;
+}
+
+/* Body Regular — Standard copy */
+.type-body {
+  font-family: var(--font-manrope), sans-serif;
+  font-size: clamp(0.9375rem, 1vw, 1rem);
+  line-height: 1.6;
+  letter-spacing: -0.005em;
+}
+
+/* Caption — Micro-copy, captions, timestamp */
+.type-caption {
+  font-family: var(--font-manrope), sans-serif;
+  font-size: clamp(0.8125rem, 0.9vw, 0.875rem);
+  line-height: 1.45;
+  letter-spacing: 0;
+  color: var(--text-muted);
+}
+
+/* Label — Editorial indices, uppercase metadata, status badges */
+.type-label {
+  font-family: var(--font-manrope), sans-serif;
+  font-size: clamp(0.6875rem, 0.75vw, 0.75rem);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  line-height: 1.1;
+}
+
+/* Editorial Serif & Italic Helpers */
+.font-serif-regular {
+  font-family: var(--font-instrument-serif), serif;
+  font-style: normal;
+}
+
+.font-serif-italic {
+  font-family: var(--font-instrument-serif), serif;
+  font-style: italic;
+}
