@@ -199,7 +199,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
       ref={sectionRef}
       id="hero"
       aria-label="Introduction & Art Exhibition"
-      className="relative w-full min-h-screen bg-background text-foreground overflow-hidden flex flex-col justify-between pt-24 pb-20 border-b border-border"
+      className="relative w-full min-h-screen bg-background text-foreground overflow-hidden flex flex-col justify-center pt-20 lg:pt-24 pb-12 lg:pb-16 border-b border-border"
     >
       {/* Navigation Layer */}
       <PillNav socials={socials} email={email} location={location} />
@@ -216,13 +216,19 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
         Desktop: 12-column architectural composition
         Mobile: Vertical stacked poster composition
       */}
-      <div className="relative z-10 w-full max-w-[1440px] mx-auto px-4 md:px-8 lg:px-12 flex-1 flex flex-col justify-end">
+      <div className="relative z-10 w-full max-w-[1440px] mx-auto px-4 md:px-8 lg:px-12 flex-1 flex flex-col justify-center">
         {/* DESKTOP LAYOUT (1024px+) */}
-        <div className="hidden lg:grid grid-cols-12 gap-6 items-end relative min-h-[640px]">
+        <div className="hidden lg:grid grid-cols-12 gap-6 items-start relative min-h-[580px] lg:min-h-[620px] pt-4 lg:pt-6">
           {/* Left Column: Headline, Bio & CTAs (Span 6) */}
-          <div ref={headlineRef} className="col-span-6 z-20 pb-4">
-            <div ref={availabilityPillRef} className="mb-6">
-              <AvailabilityPill text={availability} />
+          <div ref={headlineRef} className="col-span-6 z-20 self-start">
+            <div className="flex flex-wrap items-center gap-3 mb-5">
+              <span className="type-label text-text-muted font-mono tracking-widest text-[11px]">
+                CHAPTER 01 // OVERVIEW
+              </span>
+              <span className="text-border select-none">•</span>
+              <div ref={availabilityPillRef}>
+                <AvailabilityPill text={availability} />
+              </div>
             </div>
             <HeroHeadline
               line1={headlineLine1}
@@ -235,7 +241,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
           {/* Center-Right Column: Real Portrait + Interactive Lens (Span 5) */}
           <div
             ref={portraitWrapperRef}
-            className="col-span-5 col-start-7 relative z-10 flex items-end justify-center will-change-transform"
+            className="col-span-5 col-start-7 relative z-10 flex items-end justify-center self-end will-change-transform"
           >
             <div className="w-full max-w-[480px]">
               <HeroPortrait />
@@ -245,7 +251,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
           {/* Floating Element A: Tilted Website Card (Pinned Upper-Right, Span 4) */}
           <div
             ref={floatingCardRef}
-            className="absolute right-0 top-4 z-20 will-change-transform"
+            className="absolute right-0 top-0 lg:top-2 z-20 will-change-transform"
           >
             <FloatingWebsiteCard />
           </div>
@@ -253,7 +259,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
           {/* Rotating Scroll Cue (Pinned Bottom-Right) */}
           <div
             ref={scrollCueRef}
-            className="absolute -right-2 bottom-4 z-20 hidden xl:block"
+            className="absolute -right-2 bottom-0 z-20 hidden xl:block"
           >
             <ScrollCue />
           </div>
@@ -263,7 +269,11 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
         <div className="lg:hidden flex flex-col justify-between pt-6 pb-2 relative z-10">
           {/* Top: Availability & Headline */}
           <div className="mb-6">
-            <div className="mb-4">
+            <div className="flex flex-wrap items-center gap-2.5 mb-4">
+              <span className="type-label text-text-muted font-mono tracking-widest text-[10px]">
+                CHAPTER 01 // OVERVIEW
+              </span>
+              <span className="text-border select-none">•</span>
               <AvailabilityPill text={availability} />
             </div>
             <HeroHeadline
