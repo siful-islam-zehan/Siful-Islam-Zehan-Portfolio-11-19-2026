@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import NextLink from "next/link";
 import Image from "next/image";
 import {
@@ -20,7 +20,7 @@ export default function AdminOverviewPage() {
   const { showToast } = useToast();
   const { isConfigured } = useAuth();
 
-  const loadData = async () => {
+  const loadData = useCallback(async () => {
     setIsLoading(true);
     try {
       const [dp, ws] = await Promise.all([
@@ -34,11 +34,11 @@ export default function AdminOverviewPage() {
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [showToast]);
 
   useEffect(() => {
     loadData();
-  }, []);
+  }, [loadData]);
 
   const totalDesign = designProjects.length;
   const publishedDesign = designProjects.filter((p) => p.status === "published").length;

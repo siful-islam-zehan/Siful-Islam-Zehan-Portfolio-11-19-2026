@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import NextLink from "next/link";
 import Image from "next/image";
 import {
@@ -18,7 +18,7 @@ export default function DevelopedWebsitesListPage() {
   const [isDeleting, setIsDeleting] = useState(false);
   const { showToast } = useToast();
 
-  const loadWebsites = async () => {
+  const loadWebsites = useCallback(async () => {
     setIsLoading(true);
     try {
       const data = await fetchAllDevelopedWebsites();
@@ -28,11 +28,11 @@ export default function DevelopedWebsitesListPage() {
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [showToast]);
 
   useEffect(() => {
     loadWebsites();
-  }, []);
+  }, [loadWebsites]);
 
   const handleToggleStatus = async (website: DbDevelopedWebsite) => {
     const nextStatus = website.status === "published" ? "draft" : "published";

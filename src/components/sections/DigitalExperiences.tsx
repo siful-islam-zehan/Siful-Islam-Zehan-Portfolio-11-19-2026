@@ -53,7 +53,9 @@ export const DigitalExperiences: React.FC<DigitalExperiencesProps> = ({ projects
         }
       }
     }
+  }, [developedProjects]);
 
+  useEffect(() => {
     const section = sectionRef.current;
     if (!section || isReducedMotion()) return;
 

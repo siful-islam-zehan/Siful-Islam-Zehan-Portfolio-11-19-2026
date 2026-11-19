@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import NextLink from "next/link";
 import Image from "next/image";
 import {
@@ -18,7 +18,7 @@ export default function DesignProjectsListPage() {
   const [isDeleting, setIsDeleting] = useState(false);
   const { showToast } = useToast();
 
-  const loadProjects = async () => {
+  const loadProjects = useCallback(async () => {
     setIsLoading(true);
     try {
       const data = await fetchAllDesignProjects();
@@ -28,11 +28,11 @@ export default function DesignProjectsListPage() {
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [showToast]);
 
   useEffect(() => {
     loadProjects();
-  }, []);
+  }, [loadProjects]);
 
   const handleToggleStatus = async (project: DbDesignProject) => {
     const nextStatus = project.status === "published" ? "draft" : "published";

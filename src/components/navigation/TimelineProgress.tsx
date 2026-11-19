@@ -14,18 +14,18 @@ interface TimelineProgressProps {
   activeSection?: number;
 }
 
+const SECTIONS = [
+  { num: "01", label: "Overview", href: "#hero", targetId: "hero", index: 1 },
+  { num: "02", label: "Works", href: "#works", targetId: "works", index: 2 },
+  { num: "03", label: "Experiences", href: "#experiences", targetId: "experiences", index: 3 },
+  { num: "04", label: "Contact", href: "#contact", targetId: "contact", index: 4 },
+];
+
 export const TimelineProgress: React.FC<TimelineProgressProps> = ({
   className = "",
   activeSection: initialActiveSection = 1,
 }) => {
   const [activeSection, setActiveSection] = useState<number>(initialActiveSection);
-
-  const sections = [
-    { num: "01", label: "Overview", href: "#hero", targetId: "hero", index: 1 },
-    { num: "02", label: "Works", href: "#works", targetId: "works", index: 2 },
-    { num: "03", label: "Experiences", href: "#experiences", targetId: "experiences", index: 3 },
-    { num: "04", label: "Contact", href: "#contact", targetId: "contact", index: 4 },
-  ];
 
   useEffect(() => {
     if (typeof window === "undefined" || isReducedMotion()) return;
@@ -33,7 +33,7 @@ export const TimelineProgress: React.FC<TimelineProgressProps> = ({
     const triggers: ScrollTrigger[] = [];
 
     // Observe each section with ScrollTrigger
-    sections.forEach((sec) => {
+    SECTIONS.forEach((sec) => {
       const el = document.getElementById(sec.targetId);
       if (!el) return;
 
@@ -88,7 +88,7 @@ export const TimelineProgress: React.FC<TimelineProgressProps> = ({
     >
       <div className="max-w-[1440px] mx-auto px-4 md:px-8 lg:px-12 py-3 flex items-center justify-between">
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 sm:gap-12 w-full max-w-4xl">
-          {sections.map((s) => {
+          {SECTIONS.map((s) => {
             const isActive = activeSection === s.index;
             return (
               <a
